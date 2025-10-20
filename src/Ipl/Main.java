@@ -130,7 +130,7 @@ public class Main {
         List<Delivery> deliveries = fetchDeliveries();
         
         matchesPerYear(matches);
-
+        matchesWinPerTeam(matches);
     }
 
     private static void matchesPerYear(List<Match> matches) {
@@ -145,4 +145,20 @@ public class Main {
             System.out.println(hm.get(key) + " matches played in year "+ key);
         }
     }
+
+    private static void matchesWinPerTeam(List<Match> matches){
+        HashMap<String,Integer> hm = new HashMap<>();
+
+        for (int i = 0; i < matches.size(); i++) {
+            String team = matches.get(i).getWinner();
+            if( team != null && !team.isEmpty()) {
+                hm.put(team, hm.getOrDefault(team, 0) + 1);
+            }else{
+                String x = "NO_RESULT";
+                hm.put(x, hm.getOrDefault(x, 0)+1);
+            }
+        }
+        System.out.println(hm);
+    }
+
 }
