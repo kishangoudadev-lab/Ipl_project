@@ -130,7 +130,8 @@ public class Main {
         List<Delivery> deliveries = fetchDeliveries();
         
         matchesPerYear(matches);
-        matchesWinPerTeam(matches);
+        matchesWonPerTeam(matches);
+        extraRunsPerTeamIn2016(matches, deliveries);
     }
 
     private static void matchesPerYear(List<Match> matches) {
@@ -146,7 +147,7 @@ public class Main {
         }
     }
 
-    private static void matchesWinPerTeam(List<Match> matches){
+    private static void matchesWonPerTeam(List<Match> matches){
         HashMap<String,Integer> hm = new HashMap<>();
 
         for (int i = 0; i < matches.size(); i++) {
@@ -160,5 +161,24 @@ public class Main {
         }
         System.out.println(hm);
     }
+
+    private static void extraRunsPerTeamIn2016(List<Match> matches, List<Delivery> deliveries) {
+        List<Integer> ids = new ArrayList<>();
+        for (int i = 0; i < matches.size(); i++) {
+            if(matches.get(i).getSeason() == 2016){
+                ids.add(matches.get(i).getId());
+            }
+        }
+        HashMap<String, Integer> hm = new HashMap<>();
+        for (int i = 0; i < deliveries.size(); i++) {
+            if(ids.contains(deliveries.get(i).getMatchId())){
+                String team = deliveries.get(i).getBowlingTeam();
+                hm.put(team, hm.getOrDefault(team, 0)+deliveries.get(i).getExtraRuns());
+
+            }
+        }
+        System.out.println(hm);
+    }
+
 
 }
