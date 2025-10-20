@@ -134,6 +134,49 @@ public class Main {
         extraRunsPerTeamIn2016(matches, deliveries);
         topEconomicBowlerOf2015(deliveries,matches);
         wonTossAndWonMatch(matches);
+        findTopRunScorer(deliveries);
+        findFinalMatchPerSeason(matches);
+    }
+
+    private static void findFinalMatchPerSeason(List<Match> matches) {
+        Map<Integer, String[]> hm = new TreeMap<>();
+        Map<Integer, Integer> maxMap = new HashMap<>();
+
+        for (int i = 0; i < matches.size(); i++) {
+            int year = matches.get(i).getSeason();
+            int id = matches.get(i).getId();
+
+            // If this is the first match of the season or has a higher ID, update it
+            if (!maxMap.containsKey(year) || id > maxMap.get(year)) {
+                maxMap.put(year, id);
+                String[] ans = new String[2];
+                ans[0] = matches.get(i).getTeam1();
+                ans[1] = matches.get(i).getTeam2();
+                hm.put(year, ans);
+            }
+        }
+
+        // Print final matches
+        for (int year : hm.keySet()) {
+            System.out.println("Year " + year + " Final match: " + hm.get(year)[0] + " vs " + hm.get(year)[1]);
+        }
+    }
+
+
+    private static void findTopRunScorer(List<Delivery> deliveries) {
+        String batsman = "";
+        int max = Integer.MIN_VALUE;
+        HashMap<String, Integer> hm = new HashMap<>();
+        for (int i = 0; i < deliveries.size(); i++) {
+            int run = deliveries.get(i).getBatsmanRuns();
+            String bm = deliveries.get(i).getBatsman();
+            hm.put(bm, hm.getOrDefault(bm, 0)+run);
+            if(max < hm.get(bm)){
+                max = hm.get(bm);
+                batsman = bm;
+            }
+        }
+        System.out.println(batsman);
     }
 
     private static void wonTossAndWonMatch(List<Match> matches) {
