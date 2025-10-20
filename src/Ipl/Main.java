@@ -132,7 +132,22 @@ public class Main {
         matchesPerYear(matches);
         matchesWonPerTeam(matches);
         extraRunsPerTeamIn2016(matches, deliveries);
+        topEconomicBowlerOf2015(deliveries,matches);
+        wonTossAndWonMatch(matches);
     }
+
+    private static void wonTossAndWonMatch(List<Match> matches) {
+        List<String> ans = new ArrayList<>();
+        for (int i = 0; i < matches.size(); i++) {
+            String matWin = matches.get(i).getWinner();
+            String tosWin = matches.get(i).getTossWinner();
+            if(matWin.equals(tosWin)){
+                ans.add(matWin);
+            }
+        }
+        System.out.println(ans);
+    }
+
 
     private static void matchesPerYear(List<Match> matches) {
         TreeMap<Integer,Integer> hm = new TreeMap<>();//TreeMap for sorting the Year
@@ -180,5 +195,42 @@ public class Main {
         System.out.println(hm);
     }
 
+    private static void topEconomicBowlerOf2015(List<Delivery> deliveries,List<Match> matches) {
+        HashMap<String, Integer> totalRuns = new HashMap<>();
+        HashMap<String, Integer> totalBalls = new HashMap<>();
+        List<Integer> ids  = new ArrayList<>();
+
+        for (int i = 0; i < matches.size(); i++) {
+            if(matches.get(i).getSeason()==2015){
+                ids.add(matches.get(i).getId());
+            }
+        }
+        for (int i = 0; i < deliveries.size(); i++) {
+            if(ids.contains(deliveries.get(i).getMatchId())) {
+                String player = deliveries.get(i).getBowler();
+                totalRuns.put(player, totalRuns.getOrDefault(player, 0) + deliveries.get(i).getTotalRuns());
+            }
+        }
+        for (int i = 0; i < deliveries.size(); i++) {
+            if(ids.contains(deliveries.get(i).getMatchId())){
+            String player = deliveries.get(i).getBowler();
+            if(deliveries.get(i).getWideRuns()==0 && deliveries.get(i).getNoBallRuns()==0){
+                totalBalls.put(player, totalBalls.getOrDefault(player,0)+1);
+            }
+            }
+        }
+        double min = Double.MAX_VALUE;
+        String ans = "";
+        for(String p : totalRuns.keySet()){
+            if(totalBalls.get(p)>0) {
+                double economy =  ((double)totalRuns.get(p) / totalBalls.get(p)) * 6;
+                if (economy < min) {
+                    min = economy;
+                    ans = p;
+                }
+            }
+        }
+        System.out.println(ans);
+    }
 
 }
